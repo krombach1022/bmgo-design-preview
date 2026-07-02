@@ -2857,5 +2857,24 @@ function App() {
 }
 ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
+<script>
+/* Route every "Register" CTA straight to the Wix event page.
+   Event delegation on the document survives React re-renders (the countdown
+   re-renders every second, which would otherwise wipe any href we set). */
+(function () {
+  var EVENT_URL = "https://www.bromontanagolf.com/events/bmgo-2026";
+  document.addEventListener('click', function (e) {
+    var el = e.target && e.target.closest ? e.target.closest('a, button') : null;
+    if (!el) return;
+    if (((el.textContent || '').toUpperCase()).indexOf('REGISTER') === -1) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // Prefer navigating the whole page (works when the embedding iframe allows
+    // top navigation); fall back to a new tab if the sandbox blocks it.
+    try { window.top.location.href = EVENT_URL; }
+    catch (err) { window.open(EVENT_URL, '_blank', 'noopener'); }
+  }, true);
+})();
+</script>
 </body>
 </html>
